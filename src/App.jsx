@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import './App.css';
-import ThemeToggle from './ThemeToggle';
 
 const schema = yup.object().shape({
   comment: yup
@@ -27,6 +26,7 @@ const schema = yup.object().shape({
 function App() {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Ajout du state pour l'erreur
   const comments = useSelector(state => state.comments.list);
   const dispatch = useDispatch();
 
@@ -38,10 +38,15 @@ function App() {
     const fetchMovie = async () => {
       try {
         const response = await fetch('https://jsonfakery.com/movies/random/1');
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération du film');
+        }
         const data = await response.json();
         setMovie(data[0]);
+        setError(null);
       } catch (error) {
         console.error("Erreur lors du chargement du film:", error);
+        setError(error.message); // Gestion de l'erreur
       } finally {
         setLoading(false);
       }
@@ -69,10 +74,16 @@ function App() {
     </Container>
   );
 
-  return (
+  if (error) return (
     <Container className="py-4">
-      <ThemeToggle /> {/* Ajout du bouton Dark/Light */}
-      
+      <Alert variant="danger">
+        Erreur lors du chargement du film : {error}
+      </Alert>
+    </Container>
+  );
+
+  return (
+    <Container className="py-4">      
       <Card className="mb-4 border">
         <Card.Img 
           variant="top"
