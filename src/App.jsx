@@ -26,7 +26,7 @@ const schema = yup.object().shape({
 function App() {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // Ajout du state pour l'erreur
+  const [error, setError] = useState(null);
   const comments = useSelector(state => state.comments.list);
   const dispatch = useDispatch();
 
@@ -46,7 +46,7 @@ function App() {
         setError(null);
       } catch (error) {
         console.error("Erreur lors du chargement du film:", error);
-        setError(error.message); // Gestion de l'erreur
+        setError("Une erreur est survenue lors du chargement du film. Veuillez réessayer.");
       } finally {
         setLoading(false);
       }
@@ -56,14 +56,18 @@ function App() {
   }, []);
 
   const onSubmit = (data) => {
-    const newComment = {
-      id: Date.now(),
-      text: data.comment,
-      rating: data.note,
-      date: new Date().toLocaleDateString()
-    };
-    dispatch(addComment(newComment));
-    reset();
+    try {
+      const newComment = {
+        id: Date.now(),
+        text: data.comment,
+        rating: data.note,
+        date: new Date().toLocaleDateString()
+      };
+      dispatch(addComment(newComment));
+      reset();
+    } catch (error) {
+      setError("Une erreur est survenue lors de l'ajout du commentaire");
+    }
   };
 
   if (loading) return (
@@ -77,13 +81,13 @@ function App() {
   if (error) return (
     <Container className="py-4">
       <Alert variant="danger">
-        Erreur lors du chargement du film : {error}
+        {error}
       </Alert>
     </Container>
   );
 
   return (
-    <Container className="py-4">      
+    <Container className="py-4">
       <Card className="mb-4 border">
         <Card.Img 
           variant="top"
@@ -106,6 +110,8 @@ function App() {
           <h3 className="mb-0">Commentaires</h3>
         </Card.Header>
         <Card.Body>
+          {error && <Alert variant="danger">{error}</Alert>}
+          
           <Form onSubmit={handleSubmit(onSubmit)}>
             <Form.Group className="mb-3">
               <Form.Label>Ajouter un commentaire :</Form.Label>
