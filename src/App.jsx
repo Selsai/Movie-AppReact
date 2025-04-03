@@ -39,35 +39,27 @@ function App() {
       try {
         const response = await fetch('https://jsonfakery.com/movies/random/1');
         if (!response.ok) {
-          throw new Error('Erreur lors de la récupération du film');
+          throw new Error();
         }
         const data = await response.json();
         setMovie(data[0]);
-        setError(null);
-      } catch (error) {
-        console.error("Erreur lors du chargement du film:", error);
-        setError("Une erreur est survenue lors du chargement du film. Veuillez réessayer.");
+      } catch {
+        setError("Une erreur est survenue. Veuillez réessayer plus tard.");
       } finally {
         setLoading(false);
       }
     };
-
     fetchMovie();
   }, []);
 
   const onSubmit = (data) => {
-    try {
-      const newComment = {
-        id: Date.now(),
-        text: data.comment,
-        rating: data.note,
-        date: new Date().toLocaleDateString()
-      };
-      dispatch(addComment(newComment));
-      reset();
-    } catch (error) {
-      setError("Une erreur est survenue lors de l'ajout du commentaire");
-    }
+    const newComment = {
+      id: Date.now(),
+      text: data.comment,
+      rating: data.note
+    };
+    dispatch(addComment(newComment));
+    reset();
   };
 
   if (loading) return (
@@ -80,9 +72,7 @@ function App() {
 
   if (error) return (
     <Container className="py-4">
-      <Alert variant="danger">
-        {error}
-      </Alert>
+      <Alert variant="danger">{error}</Alert>
     </Container>
   );
 
@@ -106,71 +96,38 @@ function App() {
       </Card>
 
       <Card className="border">
-        <Card.Header className="bg-white">
-          <h3 className="mb-0">Commentaires</h3>
-        </Card.Header>
         <Card.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
-          
+          <h3>Commentaires</h3>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <Form.Group className="mb-3">
               <Form.Label>Ajouter un commentaire :</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                {...register('comment')}
-                isInvalid={!!errors.comment}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.comment?.message}
-              </Form.Control.Feedback>
+              <Form.Control as="textarea" rows={3} {...register('comment')} isInvalid={!!errors.comment} />
+              <Form.Control.Feedback type="invalid">{errors.comment?.message}</Form.Control.Feedback>
             </Form.Group>
-
             <Form.Group className="mb-3">
               <Form.Label>Note :</Form.Label>
               <Form.Select {...register('note')} isInvalid={!!errors.note}>
                 <option value="">Sélectionnez une note</option>
-                {[1, 2, 3, 4, 5].map(num => (
-                  <option key={num} value={num}>{num}</option>
-                ))}
+                {[1, 2, 3, 4, 5].map(num => <option key={num} value={num}>{num}</option>)}
               </Form.Select>
-              <Form.Control.Feedback type="invalid">
-                {errors.note?.message}
-              </Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">{errors.note?.message}</Form.Control.Feedback>
             </Form.Group>
-
             <Form.Group className="mb-3">
-              <Form.Check
-                type="checkbox"
-                label="J'accepte les conditions générales"
-                {...register('acceptConditions')}
-                isInvalid={!!errors.acceptConditions}
-                feedback={errors.acceptConditions?.message}
-                feedbackType="invalid"
-              />
+              <Form.Check type="checkbox" label="J'accepte les conditions générales" {...register('acceptConditions')} isInvalid={!!errors.acceptConditions} />
             </Form.Group>
-
-            <Button variant="primary" type="submit">
-              Ajouter
-            </Button>
+            <Button variant="primary" type="submit">Ajouter</Button>
           </Form>
-
           {comments.length === 0 ? (
-            <Alert variant="info" className="mt-4 text-center">
-              Aucun commentaire pour le moment
-            </Alert>
+            <Alert variant="info" className="mt-4 text-center">Aucun commentaire pour le moment</Alert>
           ) : (
             comments.map(comment => (
               <Card key={comment.id} className="mt-3">
-                <Card.Body>
-                  <div className="d-flex justify-content-between">
-                    <div className="fw-bold">Note : {comment.rating}/5</div>
-                    <div className="text-muted small">{comment.date}</div>
-                  </div>
+                <Card.Body className="comment-card">
+                  <div className="fw-bold">Note : {comment.rating}/5</div>
                   <Card.Text>{comment.text}</Card.Text>
-                  <Button variant="danger" size="sm" onClick={() => dispatch(deleteComment(comment.id))}>
-                    Supprimer
-                  </Button>
+                  <div className="d-flex justify-content-end">
+                    <Button variant="danger" size="sm" onClick={() => dispatch(deleteComment(comment.id))}>Supprimer</Button>
+                  </div>
                 </Card.Body>
               </Card>
             ))
