@@ -1,0 +1,114 @@
+/*        Theme Toggle        */
+.cinema-theme-toggle {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    padding: 12px;
+    border-radius: 50%;
+    transition: transform 0.3s ease, background 0.5s ease;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Bouton pour le mode cinéma (dark) */
+[data-cinema-theme="dark"] .cinema-theme-toggle {
+    background: radial-gradient(circle, #222 30%, #000 100%);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    animation: sparkle 1.5s infinite alternate;
+}
+
+/* Bouton pour le mode plein air (light) */
+[data-cinema-theme="light"] .cinema-theme-toggle {
+    background: linear-gradient(to bottom, #fffacd, #ffebcd);
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.6);
+    animation: floatClouds 3s infinite alternate;
+}
+
+/* Icônes */
+.cinema-icon, .pleinair-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.cinema-icon {
+    color: #6c757d;    
+}
+
+/* Effet scintillant pour le mode cinéma */
+@keyframes sparkle {
+    0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+    100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+}
+
+/* Animation de nuages flottants pour le mode plein air */
+@keyframes floatClouds {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
+}
+
+/* Fond du mode Cinéma */
+.cinema-theme-dark {
+    background: url('https://www.transparenttextures.com/patterns/stardust.png'), #0a0a0a;
+    color: #e0e0e0;
+}
+
+/*        Back to Top         */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(20px);
+    border: none;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Synchronisation avec le mode Dark */
+[data-cinema-theme="dark"] .back-to-top {
+    background: radial-gradient(circle, #222 30%, #000 100%);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    animation: sparkle 1.5s infinite alternate;
+}
+
+/* Synchronisation avec le mode Light */
+[data-cinema-theme="light"] .back-to-top {
+    background: linear-gradient(to bottom, #fffacd, #ffebcd);
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.6);
+    animation: floatClouds 3s infinite alternate;
+}
+
+/* Icône de la flèche */
+.back-to-top svg {
+    width: 30px;
+    height: 30px;
+}
+
+/* Changer la couleur de l'icône en fonction du thème */
+[data-cinema-theme="dark"] .back-to-top svg {
+    color: #6c757d;
+}
+
+[data-cinema-theme="light"] .back-to-top svg {
+    color: #333;
+}
