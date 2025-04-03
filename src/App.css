@@ -1,52 +1,12 @@
-/* Style de l'image du film */
-.card-img, .card-img-top {
-  height: 700px;
+.card-img {
+  height: 500px;
   display: block;
   margin: auto;
 }
 
-/* Supprimer le style movie-image */
-.movie-image {
-  all: unset;
+.comment-footer {
+  display: flex;
+  justify-content: flex-end; 
+  margin-top: 10px;
 }
 
-/* Centrer le texte */
-.text-center {
-  text-align: center;
-}
-
-/* Espacement et bordures */
-.card {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  border: none;
-}
-
-.card-body {
-  padding: 1.25rem;
-}
-
-/* Style du bouton */
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-}
-
-.btn-primary:hover {
-  background-color: #0069d9;
-  border-color: #0062cc;
-}
-
-/* Suppression de tout style spécifique à l'image */
-.object-fit-cover {
-  object-fit: contain;
-}
-
-/* Style du spinner de chargement */
-.spinner-border {
-  width: 3rem;
-  height: 3rem;
-}
